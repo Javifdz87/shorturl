@@ -17,10 +17,11 @@ class ValidateBearerToken
     {
         $token = $request->bearerToken();
         if ($token !== null && $this->validateParentheses($token)) {
-            return response()->json(['message' => 'Token válido'], 200);
+            return $next($request);
         }
 
         return response()->json(['error' => 'Token inválido'], 401);
+
     }
 
     private function validateParentheses($token)
