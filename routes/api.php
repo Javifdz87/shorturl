@@ -18,11 +18,6 @@ use App\Http\Middleware\ValidateBearerToken;
 |
 */
 
-
-//Route::prefix('v1')->group(function () {
-   // Route::post('/shorten', [URLController::class, 'shorten'])->name('shorten');
-//});
-
 Route::prefix('v1')->group(function () {
    Route::middleware(ValidateBearerToken::class)->post('/shorten', [URLController::class, 'shorten'])->name('shorten');
 });
