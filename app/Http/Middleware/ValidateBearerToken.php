@@ -20,11 +20,14 @@ class ValidateBearerToken
             return $next($request);
         }
 
-        return response()->json(['error' => 'Token inválido'], 401);
-
+        return response()->json(['error' => 'Token invalid'], 401);
     }
 
-    private function validateParentheses($token)
+    /**
+     * @param String $token
+     * @return bool
+     */
+    public function validateParentheses(string $token)
     {
         $stack = [];
 
@@ -36,20 +39,22 @@ class ValidateBearerToken
                     array_push($stack, $char);
                     break;
                 case ']':
-                    if (empty($stack) || array_pop($stack) !== '[') {
+                    if (array_pop($stack) !== '[') {
                         return false;
                     }
                     break;
                 case '}':
-                    if (empty($stack) || array_pop($stack) !== '{') {
+                    if (array_pop($stack) !== '{') {
                         return false;
                     }
                     break;
                 case ')':
-                    if (empty($stack) || array_pop($stack) !== '(') {
+                    if (array_pop($stack) !== '(') {
                         return false;
                     }
                     break;
+                default:
+                    return false;
             }
         }
 

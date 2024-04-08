@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Providers\ShortProvider;
 
 class URLController extends Controller
 {
-    public function shorten(Request $request)
+    /**
+     * @param Request $request
+     * @param ShortProvider $shortProvider
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function shorten(Request $request, ShortProvider $shortProvider)
     {
         $request->validate([
             'url' => 'required|string',
@@ -15,12 +20,7 @@ class URLController extends Controller
 
         $url = $request->url;
 
-        $response = Http::get('https://tinyurl.com/api-create.php', [
-            'url' => $url,
-        ]);
-
-        $shortenedUrl = $response->body();
-
+        $shortenedUrl = $shortProvider->getShortURL($url);
 
         return response()->json(['url' => "<".$shortenedUrl.">"], 200, [], JSON_UNESCAPED_SLASHES);
     }
